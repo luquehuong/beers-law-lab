@@ -16,6 +16,7 @@ define( function( require ) {
   var MovableDragHandler = require( 'SCENERY_PHET/input/MovableDragHandler' );
   var Node = require( 'SCENERY/nodes/Node' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var Property = require( 'AXON/Property' );
   var SubSupText = require( 'SCENERY_PHET/SubSupText' );
 
   // images
@@ -92,10 +93,13 @@ define( function( require ) {
       thisNode.setVisible( visible );
     } );
 
+    // allow the label to be overridden via a query parameter
+    var labelOverride = new Property( null, { tandem: tandem.createTandem( 'labelOverride' ) } );
+
     // sync solute with model
     shaker.soluteProperty.link( function( solute ) {
       // label the shaker with the solute formula
-      labelNode.setText( solute.formula );
+      labelNode.setText( labelOverride.value === null ? solute.formula : labelOverride.value );
       // center the label on the shaker
       var capWidth = 0.3 * imageNode.width; // multiplier is dependent on image file
       labelNode.centerX = capWidth + ( imageNode.width - capWidth ) / 2;
